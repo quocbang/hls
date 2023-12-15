@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HLS Video Player</title>
+    <!-- Include HLS.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+    <video id="videoPlayer" controls autoplay></video>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (Hls.isSupported()) {
+                var video = document.getElementById('videoPlayer');
+                var hls = new Hls();
+                
+                // Replace 'your_m3u8_url_here' with the URL to your .m3u8 playlist file
+                var videoUrl = 'http://localhost:8000/api/watch';
+                
+                hls.loadSource(videoUrl);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = '';
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
