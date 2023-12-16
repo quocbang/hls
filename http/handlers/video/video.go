@@ -25,3 +25,9 @@ func (s *service) Watch(c echo.Context) error {
 	c.Response().Header().Set("Content-type", "application/vnd.apple.mpegurl")
 	return c.File("./assets/video/den/mo_denvau.m3u8")
 }
+
+func (s *service) Play(c echo.Context) error {
+	requestFile := c.Param("requestFile")
+	log.Printf("start play file %s", requestFile)
+	return c.File(fmt.Sprintf("./assets/video/den/%s", requestFile))
+}

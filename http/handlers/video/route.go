@@ -8,4 +8,5 @@ func Init(g *echo.Group) {
 	video := NewVideoService()
 
 	g.GET("/watch", video.Watch)
+	g.GET("/play/:requestFile", video.Play)
 }
