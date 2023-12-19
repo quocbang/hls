@@ -3,7 +3,6 @@ package video
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,18 +15,22 @@ func NewVideoService() Video {
 }
 
 func (s *service) Watch(c echo.Context) error {
-	log.Println("start quest video")
-	f, err := os.Open("./assets/video/den/mo_denvau.m3u8")
-	if err != nil {
-		return c.JSON(500, fmt.Errorf("failed to open video, error: %v", err).Error())
-	}
-	defer f.Close()
 	c.Response().Header().Set("Content-type", "application/vnd.apple.mpegurl")
-	return c.File("./assets/video/den/mo_denvau.m3u8")
+	return c.File("./assets/video/master.m3u8")
+}
+
+type PlayVideoRequest struct {
+	Size string `json:"size" query:"size"`
+	File string `json:"file" query:"file"`
 }
 
 func (s *service) Play(c echo.Context) error {
-	requestFile := c.Param("requestFile")
-	log.Printf("start play file %s", requestFile)
-	return c.File(fmt.Sprintf("./assets/video/den/%s", requestFile))
+	var (
+		req PlayVideoRequest
+	)
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(400, err.Error())
+	}
+	log.Printf("start play size: %s file: %s", req.Size, req.File)
+	return c.File(fmt.Sprintf("./assets/video/%s/%s", req.Size, req.File))
 }
