@@ -14,3 +14,12 @@ ffmpeg -i mo_denvau.mp4  \
 -filter:v:5 scale="trunc(oh*a/2)*2:1440" -maxrate:v:5 16000k -bufsize:v:5 80000k -b:a:5 192k \
 -var_stream_map "v:0,a:0,name:240p v:1,a:1,name:360p v:2,a:2,name:480p v:3,a:3,name:720p v:4,a:4,name:1080p v:5,a:5,name:1440p" \
 -hls_time 4 -hls_list_size 0 -master_pl_name master.m3u8 -hls_segment_filename %v/mo_denvau_%06d.ts %v/mo_denvau.m3u8
+
+# check whether video has audio
+ffprobe -v error -select_streams a:0 -show_entries stream=codec_type -of default=nw=1:nk=1 mo_denvau.mp4
+
+# check bitrate of video
+ffprobe -v error -select_streams v:0 -show_entries stream=bit_rate -of default=nw=1:nk=1 mo_denvau.mp4
+
+# check video width, height
+ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of default=nw=1:nk=1 mo_denvau.mp4
